@@ -22,78 +22,46 @@
   <div class="header" id="header">
     <div class="container">
       <a href="#" class="logo">عطـر الشـرق</a>
+
+      <div class="menu-toggle" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
       <ul class="main-nav">
         <li><a href="#articles">أقسام العطور</a></li>
         <li><a href="#gallery">الأكثر مبيـعاً</a></li>
-        <li><a href="#features">ليـه تختارنا؟</a></li>
-        <li><a href="#testimonials">آراء العمـلاء </a></li>
         <li><a href="#pricing"> العروض</a></li>
         <li><a href="#form"> شراء الآن</a></li>
-        <!-- <li>
-            <a href="#">Other Links</a>
-           
-            <div class="mega-menu">
-              <div class="image">
-                <img src="imgs/megamenu.png" alt="" />
-              </div>
-              <ul class="links">
-                <li>
-                  <a href="#testimonials"><i class="far fa-comments fa-fw"></i> Testimonials</a>
-                </li>
-                <li>
-                  <a href="#team"><i class="far fa-user fa-fw"></i> Team Members</a>
-                </li>
-                <li>
-                  <a href="#services"><i class="far fa-building fa-fw"></i> Services</a>
-                </li>
-                <li>
-                  <a href="#our-skills"><i class="far fa-check-circle fa-fw"></i> Our Skills</a>
-                </li>
-                <li>
-                  <a href="#work-steps"><i class="far fa-clipboard fa-fw"></i> How It Works</a>
-                </li>
-              </ul>
-              <ul class="links">
-                <li>
-                  <a href="#events"><i class="far fa-calendar-alt fa-fw"></i> Events</a>
-                </li>
-                <li>
-                  <a href="#pricing"><i class="fas fa-server fa-fw"></i> Pricing Plans</a>
-                </li>
-                <li>
-                  <a href="#video"><i class="far fa-play-circle fa-fw"></i> Top Videos</a>
-                </li>
-                <li>
-                  <a href="#stats"><i class="far fa-chart-bar fa-fw"></i> Stats</a>
-                </li>
-                <li>
-                  <a href="#discount"><i class="fas fa-percent fa-fw"></i> Request A Discount</a>
-                </li>
-              </ul>
-            </div>
-           
-          </li> -->
       </ul>
     </div>
   </div>
   <!-- End Header -->
+
+
+
   <!-- Start Landing -->
   <div class="landing">
+    <video autoplay loop muted playsinline class="back-video">
+      <source src="videos/perfume.mp4" type="video/mp4">
+    </video>
+
+    <div class="video-overlay"></div>
+
     <div class="container">
       <div class="text">
-        <h1>مرحبا بكم فى عطر الشـرق</h1>
-        <P>"عطر الشرق.. نفحات تأخذك في رحلة عبر الزمن، لتبقى ذكراك خالدة في كل مكان. بصمة عطرية تتحدث عنك قبل أن تتكلم،
-          وتترك أثراً لا يمحوه الغياب."</P>
-      </div>
-      <div class="image">
-        <img src="imgs/landing-image.png" alt="" />
+        <h1 id="typewriter-h1"></h1>
+        <p id="typewriter-p"></p>
       </div>
     </div>
+
     <a href="#articles" class="go-down">
       <i class="fas fa-angle-double-down fa-2x"></i>
     </a>
   </div>
-  <!-- End Landing -->
+  <!-- End landing -->
+
+
   <!-- Start Articles -->
   <div class="articles" id="articles">
     <h2 class="main-title">أقسام العطور</h2>
@@ -145,10 +113,10 @@
         </div>
       </div>
       <div class="box">
-        <img src="imgs/cat-05.jpg" alt="" />
+        <img src="imgs/cat-04.jpg" alt="" />
         <div class="content">
           <h3> المسكات والزهور</h3>
-          <p>سر النظافة والانتعاش، تشكيلة فاخرة من أجود أنواع المسك التي تدوم طويلاً بعبير نقي ساحر</p>
+          <p>المسكات والزهور سر النظافة والانتعاش، تشكيلة فاخرة من أجود أنواع المسك التي تدوم طويلاً بعبير نقي ساحر</p>
         </div>
         <div class="info">
           <a href="javascript:void(0)"
@@ -350,7 +318,7 @@
           <i class="filled fas fa-star"></i>
           <i class="filled fas fa-star"></i>
           <i class="filled fas fa-star"></i>
-          <i class="far fa-star"></i>
+          <i class="filled fas fa-star"></i>
         </div>
         <p>
           أول مرة أشتري عطر تركيب بالجودة دي، ريحة قريبة جدًا من الأصلي وثبات محترم طول اليوم.
@@ -394,7 +362,7 @@
           <i class="filled fas fa-star"></i>
           <i class="filled fas fa-star"></i>
           <i class="filled fas fa-star"></i>
-          <i class="far fa-star"></i>
+          <i class="filled fas fa-star"></i>
           <i class="far fa-star"></i>
         </div>
         <p>
@@ -409,8 +377,9 @@
           <i class="filled fas fa-star"></i>
           <i class="filled fas fa-star"></i>
           <i class="filled fas fa-star"></i>
-          <i class="far fa-star"></i>
-          <i class="far fa-star"></i>
+          <i class="filled fas fa-star"></i>
+          <i class="filled fas fa-star"></i>
+
         </div>
         <p>
           ماكنتش متوقع الثبات يكون بالشكل ده بصراحة، العطر ريحته هادية وفخمة وبتعيش معايا طول اليوم من غير ما تزهق.
@@ -1035,20 +1004,21 @@
             <div class="info">Business Hours : 24 hours</div>
           </div>
           <div class="line">
-            <i class="fas fa-phone-volume fa-fw"></i>
+             <i class="fas fa-phone-alt"></i>
             <div class="info">
-              <span>01028278500</span>
+              <a href="tel:+201028278500" class="contact-link">
+                <span>01028278500</span>
+              </a>
+
             </div>
           </div>
           <div class="line">
             <i class="fab fa-whatsapp fa-fw" style="color: #1da1f2;"></i>
             <div class="info">
-              <span>
-                <a href="https://wa.me/201028278500?text=أهلاً%20بيك%20في%20عطر%20الشرق%20..%20قولي%20إزاي%20أقدر%20أساعدك؟"
-                  target="_blank" style="text-decoration: none; color: inherit;">
-                  01028278500
-                </a>
-              </span>
+
+              <a href="https://wa.me/201028278500?text=أهلاً%20بكم..%20أريد%20أن%20أبدأ%20رحلتي%20مع%20عطر%20الشرق%2C%20ما%20هي%20ترشيحاتكم%20لأفضل%20العطور%20الآن؟"
+                target="_blank">للتواصل واتس </a>
+
             </div>
           </div>
 
@@ -1088,56 +1058,56 @@
 ">↑</button>
     <!-- End Footer -->
     <script src="js/main.js"></script>
-<script>
-  const backToTopBtn = document.getElementById("backToTop");
+    <script>
+      const backToTopBtn = document.getElementById("backToTop");
 
-  // إضافة السهم وتنسيق الزرار داخلياً لضمان الشكل الدائري
-  if (backToTopBtn) {
-    backToTopBtn.innerHTML = '<span style="position: relative; z-index: 2;">↑</span>';
-    // إضافة طبقة سفلية سوداء لتغطية قلب الزرار وإظهار الإطار فقط
-    let innerCircle = document.createElement("div");
-    innerCircle.style.cssText = `
+      // إضافة السهم وتنسيق الزرار داخلياً لضمان الشكل الدائري
+      if (backToTopBtn) {
+        backToTopBtn.innerHTML = '<span style="position: relative; z-index: 2;">↑</span>';
+        // إضافة طبقة سفلية سوداء لتغطية قلب الزرار وإظهار الإطار فقط
+        let innerCircle = document.createElement("div");
+        innerCircle.style.cssText = `
       position: absolute;
       inset: 4px;
       background-color: #191919;
       border-radius: 50%;
       z-index: 1;
     `;
-    backToTopBtn.style.position = "fixed";
-    backToTopBtn.style.display = "none";
-    backToTopBtn.style.alignItems = "center";
-    backToTopBtn.style.justifyContent = "center";
-    backToTopBtn.appendChild(innerCircle);
-  }
-
-  window.addEventListener('scroll', function () {
-    // 1. حساب نسبة النزول في الصفحة
-    let scrollTop = window.scrollY;
-    let docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    let scrollPercent = (scrollTop / docHeight) * 100;
-
-    if (backToTopBtn) {
-      // 2. تحديث لون الإطار الدائري بناءً على النسبة
-      // اللون الأزرق #2196f3 هو اللي بيملا، والرمادي #333 هو الخلفية
-      backToTopBtn.style.background = `conic-gradient(#2196f3 ${scrollPercent}%, #333 ${scrollPercent}%)`;
-
-      // 3. إظهار وإخفاء الزرار
-      if (scrollTop > 300) {
-        backToTopBtn.style.display = "flex";
-      } else {
+        backToTopBtn.style.position = "fixed";
         backToTopBtn.style.display = "none";
+        backToTopBtn.style.alignItems = "center";
+        backToTopBtn.style.justifyContent = "center";
+        backToTopBtn.appendChild(innerCircle);
       }
-    }
-  });
 
-  // 4. وظيفة الصعود للأعلى بسلاسة
-  backToTopBtn.addEventListener('click', function () {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  });
-</script>
+      window.addEventListener('scroll', function () {
+        // 1. حساب نسبة النزول في الصفحة
+        let scrollTop = window.scrollY;
+        let docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        let scrollPercent = (scrollTop / docHeight) * 100;
+
+        if (backToTopBtn) {
+          // 2. تحديث لون الإطار الدائري بناءً على النسبة
+          // اللون الأزرق #2196f3 هو اللي بيملا، والرمادي #333 هو الخلفية
+          backToTopBtn.style.background = `conic-gradient(#2196f3 ${scrollPercent}%, #333 ${scrollPercent}%)`;
+
+          // 3. إظهار وإخفاء الزرار
+          if (scrollTop > 300) {
+            backToTopBtn.style.display = "flex";
+          } else {
+            backToTopBtn.style.display = "none";
+          }
+        }
+      });
+
+      // 4. وظيفة الصعود للأعلى بسلاسة
+      backToTopBtn.addEventListener('click', function () {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
+    </script>
 
 
     <!-- Start Popap -->
@@ -1223,6 +1193,36 @@
 
 
     <!-- انهاء بوباب العرض -->
+
+
+
+    <!-- بدايه ظهور ال 3 شرط عن الموبايل -->
+
+    <script>
+      const menuToggle = document.getElementById('menuToggle');
+      const header = document.getElementById('header');
+      const navLinks = document.querySelectorAll('.main-nav li a');
+
+      // لما تدوس على الـ 3 شرط (يفتح ويقفل)
+      menuToggle.onclick = function () {
+        header.classList.toggle('menu-open');
+      };
+
+      // لما تدوس على أي لينك جوه القائمة (يقفل المنيو فوراً)
+      navLinks.forEach(link => {
+        link.onclick = function () {
+          header.classList.remove('menu-open');
+        };
+      });
+
+
+
+
+
+    </script>
+
+
+    <!-- نهايه ال 3 شرط -->
 
 </body>
 

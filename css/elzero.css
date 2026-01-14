@@ -20,6 +20,10 @@ html {
 
 body {
   font-family: "Cairo", sans-serif;
+  direction: rtl;
+  /* اتجاه الصفحة عربي */
+  overflow-x: hidden;
+  /* منع السكرول العرضي تماماً */
 }
 
 a {
@@ -59,19 +63,26 @@ ul {
     width: 1170px;
   }
 }
+/* 1. العنوان الرئيسي - تعديل المحاذاة للموبايل */
+/* --- تعديل العنوان الرئيسي لضبط العرض والأنميشن --- */
 
 .main-title {
   text-transform: uppercase;
   margin: 0 auto 80px;
   border: 2px solid black;
-  padding: 10px 20px;
+  padding: 10px 40px; 
   font-size: 30px;
-  width: fit-content;
+  /* width: fit-content مهمة جداً عشان يفضل على قد الكلمة */
+  width: fit-content; 
   position: relative;
   z-index: 1;
-  transition: var(--main-transition);
+  transition: color 0.3s, border-color 0.3s;
+  /* منع خروج العنوان بره الشاشة في الموبايل */
+  max-width: 95%; 
+  text-align: center;
 }
 
+/* النقطتين الأساسيتين */
 .main-title::before,
 .main-title::after {
   content: "";
@@ -82,48 +93,69 @@ ul {
   border-radius: 50%;
   top: 50%;
   transform: translateY(-50%);
-}
-
-.main-title::before {
-  left: -30px;
-}
-
-.main-title::after {
-  right: -30px;
-}
-
-.main-title:hover::before {
   z-index: -1;
+}
+
+.main-title::before { left: -30px; }
+.main-title::after { right: -30px; }
+
+/* تشغيل الضمة لما الكلاس active يتضاف بالسكرول */
+.main-title.active {
+  color: white;
+  border-color: white;
+  transition-delay: 0.3s;
+}
+
+.main-title.active::before {
   animation: left-move 0.5s linear forwards;
 }
 
-.main-title:hover::after {
-  z-index: -1;
+.main-title.active::after {
   animation: right-move 0.5s linear forwards;
 }
 
-.main-title:hover {
-  color: white;
-  border: 2px solid white;
-  transition-delay: 0.5s;
+/* --- تعديل الأنميشن عشان يملى المستطيل بس --- */
+@keyframes left-move {
+  50% {
+    left: 0;
+    width: 12px;
+    height: 12px;
+  }
+  100% {
+    left: 0;
+    border-radius: 0;
+    /* التعديل هنا: يملى نص المستطيل فقط */
+    width: 50.5%; 
+    height: 100%;
+  }
 }
 
-.spikes {
-  position: relative;
+@keyframes right-move {
+  50% {
+    right: 0;
+    width: 12px;
+    height: 12px;
+  }
+  100% {
+    right: 0;
+    border-radius: 0;
+    /* التعديل هنا: يملى النص التاني فقط */
+    width: 50.5%; 
+    height: 100%;
+  }
 }
 
-.spikes::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  width: 100%;
-  height: 30px;
-  z-index: 1;
-  background-image: linear-gradient(135deg, white 25%, transparent 25%),
-    linear-gradient(225deg, white 25%, transparent 25%);
-  background-size: 30px 30px;
+/* ضبط الموبايل الصغير جداً عشان العنوان ميروحش يمين */
+@media (max-width: 767px) {
+  .main-title {
+    font-size: 22px;
+    padding: 10px 30px;
+  }
+  .main-title::before { left: -15px; }
+  .main-title::after { right: -15px; }
 }
 
+/* 3. صور النقط (الاستريكس) اللي في الجوانب - لازم تختفي في الموبايل */
 .dots {
   background-image: url("../imgs/dots.png");
   height: 186px;
@@ -132,41 +164,31 @@ ul {
   position: absolute;
 }
 
-.dots-up {
-  top: 200px;
-  right: 0;
-}
-
-.dots-down {
-  bottom: 200px;
-  left: 0;
+@media (max-width: 991px) {
+  .dots {
+    display: none; /* النقط دي بتبوظ شكل الموبايل وبتخرج بره، اخفيها أحسن */
+  }
 }
 
 /* End Global Rules */
 /* Start Header */
-
+/* Start Header */
 .header {
   position: fixed !important;
-  /* تثبيت إجباري */
   top: 0 !important;
-  /* في أعلى الشاشة */
   left: 0 !important;
   width: 100% !important;
-  /* مالي العرض كله */
   background-color: white !important;
-  /* خلفية بيضاء عشان ميبقاش شفاف */
   z-index: 9999 !important;
-  /* أعلى طبقة في الموقع كله */
   box-shadow: 0 0 10px #ddd !important;
-  /* الضل بتاعك */
 }
 
 .header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   position: relative;
+  padding: 0 15px; /* مسافة بسيطة من الجوانب */
 }
 
 .header .logo {
@@ -175,272 +197,214 @@ ul {
   font-weight: bold;
   height: 72px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  text-decoration: none;
 }
 
-@media (max-width: 767px) {
-  .header .logo {
-    width: 100%;
-    height: 50px;
-  }
+/* تنسيق الـ 3 شرط (Menu Toggle) */
+.menu-toggle {
+  display: none; /* مخفي في الديسكتوب */
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px; /* المسافة بين الشرط */
+}
+
+.menu-toggle span {
+  display: block;
+  width: 28px;
+  height: 3px;
+  background-color: var(--main-color, #2196f3); /* لون الشرط */
+  transition: 0.3s;
 }
 
 .header .main-nav {
   display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-@media (max-width: 767px) {
-  .header .main-nav {
-    margin: auto;
-  }
-}
-
-.header .main-nav>li:last-child .mega-menu {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  padding: 20px;
-  background-color: white;
-  border-bottom: 3px solid #2196f3;
-  z-index: -1;
-  /* يخليها خلف العناصر التانية وهي مخفية */
-  display: flex;
-  gap: 40px;
-  top: calc(100% + 50px);
-  /* يبعدها لتحت شوية عشان الماوس ملمسهاش بالصدفة */
-  opacity: 0;
-  /* يجعلها شفافة تماماً */
-  transition: top 0.3s, opacity 0.3s;
-  /* حركة ناعمة */
-  pointer-events: none;
-  /* يمنع التفاعل مع المنيو وهي مخفية */
-}
-
-.header .main-nav>li:hover .mega-menu {
-  opacity: 1;
-  z-index: 100;
-  top: calc(100% + 1px);
-}
-
-.header .main-nav>li>a {
+.header .main-nav > li > a {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 72px;
   position: relative;
   color: black;
-  padding: 0 30px;
-  overflow: hidden;
+  padding: 0 20px;
   font-size: 18px;
-  transition: var(--main-transition);
+  transition: 0.3s;
+  text-decoration: none;
 }
 
+/* تعديلات الموبايل (أقل من 767px) */
 @media (max-width: 767px) {
-  .header .main-nav>li>a {
-    padding: 10px;
-    font-size: 14px;
-    height: 40px;
+  .header .container {
+    height: 60px; /* ارتفاع الهيدر في الموبايل */
   }
-}
 
-.header .main-nav>li>a::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 4px;
-  background-color: var(--main-color);
-  top: 0;
-  left: -100%;
-  transition: var(--main-transition);
-}
+  .header .logo {
+    font-size: 22px;
+    height: 60px;
+  }
 
-.header .main-nav>li>a:hover {
-  color: var(--main-color);
-  background-color: #fafafa;
-}
+  /* إظهار الـ 3 شرط */
+  .menu-toggle {
+    display: flex; 
+  }
 
-.header .main-nav>li>a:hover::before {
-  left: 0;
-}
-
-.header .mega-menu {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  padding: 30px;
-  background-color: white;
-  border-bottom: 3px solid var(--main-color);
-  z-index: -1;
-  display: flex;
-  gap: 40px;
-  top: calc(100% + 50px);
-  opacity: 0;
-  transition: top var(--main-transition), opacity var(--main-transition);
-}
-
-@media (max-width: 767px) {
-  .header .mega-menu {
+  /* تحويل القائمة لمنيو مخفية تظهر عند الضغط */
+  .header .main-nav {
+    display: none; /* مخفية افتراضياً */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
     flex-direction: column;
-    gap: 0;
-    padding: 5px;
+    box-shadow: 0 5px 10px #ddd;
+    border-top: 1px solid #eee;
+  }
+
+  /* الكلاس ده هيتضاف بالـ JS لما تدوس على الزرار */
+  .header.menu-open .main-nav {
+    display: flex;
+  }
+
+  .header .main-nav > li > a {
+    height: 50px;
+    padding: 0;
+    font-size: 16px;
+    border-bottom: 1px solid #f6f6f6;
   }
 }
 
-.header .mega-menu .image img {
-  max-width: 100%;
-}
 
-@media (max-width: 991px) {
-  .header .mega-menu .image {
-    display: none;
-  }
-}
-
-.header .mega-menu .links {
-  min-width: 250px;
-  flex: 1;
-}
-
-.header .mega-menu .links li {
+/* تأثير الخط العلوي عند الهوفر */
+.header .main-nav > li {
   position: relative;
 }
 
-.header .mega-menu .links li:not(:last-child) {
-  border-bottom: 1px solid #e9e6e6;
-}
-
-@media (max-width: 767px) {
-  .header .mega-menu .links:first-of-type li:last-child {
-    border-bottom: 1px solid #e9e6e6;
-  }
-}
-
-.header .mega-menu .links li::before {
+.header .main-nav > li > a::before {
   content: "";
   position: absolute;
+  width: 0; /* يبدأ بعرض صفر */
+  height: 4px;
+  background-color: var(--main-color); /* اللون الأزرق الأساسي */
+  top: 0; /* يظهر من الأعلى */
   left: 0;
-  top: 0;
-  width: 0;
-  height: 100%;
-  background-color: #fafafa;
-  z-index: -1;
-  transition: var(--main-transition);
+  transition: var(--main-transition, 0.3s);
 }
 
-.header .mega-menu .links li:hover::before {
-  width: 100%;
-}
-
-.header .mega-menu .links li a {
+.header .main-nav > li > a:hover {
   color: var(--main-color);
-  padding: 15px;
-  display: block;
-  font-size: 18px;
-  font-weight: bold;
+  background-color: #fafafa;
 }
 
-.header .mega-menu .links li a i {
-  margin-right: 10px;
+.header .main-nav > li > a:hover::before {
+  width: 100%; /* يتمدد ليغطي عرض الكلمة بالكامل */
 }
-
 /* End Header */
 /* Start Landing */
 .landing {
   position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: flex-end; /* وضع المحتوى بالأسفل */
+  justify-content: center; /* توسيط المحتوى بالعرض */
+  overflow: hidden;
+  background-color: #101010; /* لون خلفية في حال تأخر الفيديو */
 }
 
-.landing::before {
-  content: "";
+.back-video {
   position: absolute;
+  top: 0;
   left: 0;
-  top: -40px;
   width: 100%;
   height: 100%;
-  background-color: #ececec;
-  z-index: -1;
-  transform: skewY(-6deg);
-  transform-origin: top left;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* تدريج لوني يجعل الأسفل أغمق ليظهر النص بوضوح */
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%);
+  z-index: 2;
 }
 
 .landing .container {
-  min-height: calc(100vh - 72px);
+  position: relative;
+  z-index: 3;
+  padding-bottom: 100px; /* المسافة من أسفل الشاشة */
   display: flex;
-  align-items: center;
-  padding-bottom: 120px;
+  justify-content: center;
+  width: 100%;
 }
 
 .landing .text {
-  flex: 1;
-}
-
-@media (max-width: 991px) {
-  .landing .text {
-    text-align: center;
-  }
+  text-align: center;
+  max-width: 800px;
+  color: white;
 }
 
 .landing .text h1 {
-  font-size: 40px;
-  margin: 0;
-  letter-spacing: -2px;
-}
-
-@media (max-width: 767px) {
-  .landing .text h1 {
-    font-size: 28px;
-  }
+  font-size: 45px;
+  margin: 0 0 20px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+  min-height: 1.2em; /* يحافظ على مكانه قبل الكتابة */
 }
 
 .landing .text p {
-  font-size: 23px;
-  line-height: 1.7;
-  margin: 5px 0 0;
-  color: #666;
-  max-width: 500px;
-}
-
-@media (max-width: 991px) {
-  .landing .text p {
-    margin: 10px auto;
-  }
-}
-
-@media (max-width: 767px) {
-  .landing .text p {
-    font-size: 18px;
-  }
-}
-
-.landing .image img {
-  position: relative;
-  width: 600px;
-  animation: up-and-down 5s linear infinite;
-}
-
-@media (max-width: 991px) {
-  .landing .image {
-    display: none;
-  }
+  font-size: 22px;
+  line-height: 1.6;
+  margin: 0;
+  color: #eee;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  min-height: 3em;
 }
 
 .landing .go-down {
-  color: var(--main-color);
+  color: #fff;
   position: absolute;
-  bottom: 30px;
+  bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
-  transition: var(--main-transition);
+  transition: 0.3s;
+  z-index: 4;
 }
 
 .landing .go-down:hover {
-  color: var(--main-color-alt);
+  color: var(--main-color, #d4af37);
 }
 
 .landing .go-down i {
   animation: bouncing 1.5s infinite;
 }
 
+/* مؤشر الكتابة | */
+#typewriter-h1::after, #typewriter-p::after {
+  content: "|";
+  margin-left: 5px;
+  animation: blink 0.7s infinite;
+  color: #d4af37;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* للموبايل */
+@media (max-width: 767px) {
+  .landing .text h1 { font-size: 28px; }
+  .landing .text p { font-size: 18px; }
+  .landing .container { padding-bottom: 60px; }
+}
 /* End Landing */
 /* Start Articles */
 .articles {
@@ -509,7 +473,7 @@ ul {
 }
 
 /* End Articles */
-/* Start Gallery */
+/* Start Gallery - عطر الشرق */
 .gallery {
   padding-top: var(--main-padding-top);
   padding-bottom: var(--main-padding-bottom);
@@ -519,7 +483,8 @@ ul {
 
 .gallery .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* التعديل لـ 350px لضمان 3 كروت في الصف الواحد للشاشات الكبيرة */
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 40px;
 }
 
@@ -527,6 +492,7 @@ ul {
   padding: 15px;
   background-color: white;
   box-shadow: 0px 12px 20px 0px rgb(0 0 0 / 13%), 0px 2px 4px 0px rgb(0 0 0 / 12%);
+  transition: var(--main-transition);
 }
 
 .gallery .box .image {
@@ -560,10 +526,38 @@ ul {
   transform: rotate(5deg) scale(1.1);
 }
 
+/* تنسيق اسم العطر */
 .gallery .box h2 {
   text-align: center;
+  margin-top: 15px;
+  color: var(--main-color);
+  font-size: 22px;
 }
 
+/* تأثير الفلاش */
+@keyframes flashing {
+  0%, 40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    width: 200%;
+    height: 200%;
+  }
+}
+
+/* --- ضبط ميزان الموبايل (أهم جزء) --- */
+@media (max-width: 767px) {
+  .gallery .container {
+    /* يملأ الشاشة تماماً ويمنع الخروج يميناً أو يساراً */
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+    gap: 20px;
+  }
+  
+  .gallery .box h2 {
+    font-size: 18px;
+  }
+}
 /* End Gallery */
 /* Start Features */
 .features {
@@ -575,13 +569,15 @@ ul {
 
 .features .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* ضبط الـ 350px لضمان ظهور 3 كروت في الصف الواحد للشاشات الكبيرة */
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 40px;
 }
 
 .features .box {
   text-align: center;
   border: 1px solid #ccc;
+  background-color: white;
 }
 
 .features .box .img-holder {
@@ -604,24 +600,28 @@ ul {
   bottom: 0;
   right: 0;
   border-style: solid;
+  /* تعديل الأبعاد لتناسب الـ 350px */
   border-width: 0px 0px 170px 500px;
   border-color: transparent transparent white transparent;
   transition: var(--main-transition);
+  z-index: 2;
+}
+
+.features .box:hover .img-holder::after {
+  /* عكس اتجاه الميل عند الـ Hover */
+  border-width: 170px 500px 170px 0;
 }
 
 .features .box .img-holder img {
   max-width: 100%;
 }
 
-.features .box:hover .img-holder::after {
-  border-width: 170px 500px 170px 0;
-}
-
 .features .box h2 {
   position: relative;
-  font-size: 30px;
+  font-size: 28px; /* تصغير بسيط للميزان */
   margin: auto;
   width: fit-content;
+  z-index: 3;
 }
 
 .features .box h2::after {
@@ -634,8 +634,8 @@ ul {
 }
 
 .features .box p {
-  line-height: 2;
-  font-size: 20px;
+  line-height: 1.8;
+  font-size: 18px;
   margin: 30px 0;
   padding: 25px;
   color: #777;
@@ -647,20 +647,16 @@ ul {
   width: fit-content;
   margin: 0 auto 30px;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 20px;
   padding: 10px 30px;
   border-radius: 6px;
   transition: var(--main-transition);
+  text-decoration: none;
 }
 
-.features .quality .img-holder::before {
-  background-color: rgb(244 64 54 / 45%);
-}
-
-.features .quality h2::after {
-  background-color: #f44036;
-}
-
+/* الألوان الخاصة بكل ميزة */
+.features .quality .img-holder::before { background-color: rgb(244 64 54 / 45%); }
+.features .quality h2::after { background-color: #f44036; }
 .features .quality a {
   color: #f44036;
   border-color: #f44036;
@@ -669,14 +665,8 @@ ul {
   background-position: right bottom;
 }
 
-.features .time .img-holder::before {
-  background-color: rgb(0 150 136 / 45%);
-}
-
-.features .time h2::after {
-  background-color: #009688;
-}
-
+.features .time .img-holder::before { background-color: rgb(0 150 136 / 45%); }
+.features .time h2::after { background-color: #009688; }
 .features .time a {
   color: #009688;
   border-color: #009688;
@@ -685,14 +675,8 @@ ul {
   background-position: right bottom;
 }
 
-.features .passion .img-holder::before {
-  background-color: rgb(3 169 244 / 45%);
-}
-
-.features .passion h2::after {
-  background-color: #03a9f4;
-}
-
+.features .passion .img-holder::before { background-color: rgb(3 169 244 / 45%); }
+.features .passion h2::after { background-color: #03a9f4; }
 .features .passion a {
   color: #03a9f4;
   border-color: #03a9f4;
@@ -706,8 +690,25 @@ ul {
   color: white;
 }
 
+/* --- حماية الموبايل (الميزان) --- */
+@media (max-width: 767px) {
+  .features .container {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+  }
+  .features .box h2 {
+    font-size: 24px;
+  }
+  .features .box p {
+    font-size: 16px;
+    padding: 15px;
+  }
+  /* ضبط الميل في الشاشات الصغيرة عشان ميخرمش الكارت */
+  .features .box .img-holder::after {
+      border-width: 0px 0px 100px 400px;
+  }
+}
 /* End Features */
-/* Start Testimonials */
+/* Start Testimonials - عطر الشرق المطور */
 .testimonials {
   padding-top: var(--main-padding-top);
   padding-bottom: var(--main-padding-bottom);
@@ -717,7 +718,8 @@ ul {
 
 .testimonials .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* الحفاظ على 3 كروت في الصف الواحد للشاشات الكبيرة */
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
   gap: 40px;
 }
 
@@ -727,11 +729,38 @@ ul {
   box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
   border-radius: 6px;
   position: relative;
+  margin-top: 20px;
+  /* إضافة الانتقال السلس للحركة */
+  transition: var(--main-transition);
+  z-index: 1;
+}
+
+/* 1. حركة الطلوع لفوق عند الوقوف على الكارت */
+.testimonials .box:hover {
+  transform: translateY(-10px);
+}
+
+/* 2. الخط الأزرق اللي بيفرش من النص فوق الكارت */
+.testimonials .box::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 3px;
+  top: -3px;
+  background-color: var(--main-color);
+  width: 0; /* البداية من صفر */
+  transition: var(--main-transition);
+}
+
+/* لما تعمل هوفر.. الخط يفرش بعرض الكارت */
+.testimonials .box:hover::before {
+  width: 100%;
 }
 
 .testimonials .box img {
   position: absolute;
-  right: -10px;
+  right: 0;
   top: -50px;
   width: 100px;
   height: 100px;
@@ -740,14 +769,14 @@ ul {
 }
 
 .testimonials .box h3 {
-  text-align: center;
+  text-align: right;
   margin: 0px 0px 10px;
+  padding-right: 100px;
 }
 
-.testimonials .box .title {
-  color: #777;
-  margin-bottom: 10px;
-  display: block;
+.testimonials .box .rate {
+  text-align: right;
+  padding-right: 100px;
 }
 
 .testimonials .box .rate .filled {
@@ -755,28 +784,52 @@ ul {
 }
 
 .testimonials .box p {
-  line-height: 1.5;
+  line-height: 1.6;
   color: #777;
-  margin-top: 10px;
+  margin-top: 15px;
   margin-bottom: 0;
+  text-align: right;
 }
 
+/* ضبط الموبايل لضمان الميزان */
+@media (max-width: 767px) {
+  .testimonials .container {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+  }
+  .testimonials .box h3, 
+  .testimonials .box .rate {
+    padding-right: 0;
+    text-align: center;
+    margin-top: 40px;
+  }
+  .testimonials .box img {
+    right: 50%;
+    transform: translateX(50%);
+  }
+  .testimonials .box p {
+    text-align: center;
+  }
+}
 /* End Testimonials */
-/* Start Team */
+/* End Testimonials */
+/* Start Team - عطر الشرق */
 .team {
   padding-top: var(--main-padding-top);
+  /* padding-bottom: var(--main-padding-bottom); */
   position: relative;
 }
 
 .team .container {
-  margin-bottom: 40px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* التعديل لـ 350px لضمان 3 كروت في الصف الواحد للشاشات الكبيرة */
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 30px;
 }
 
 .team .box {
   position: relative;
+  /* إضافة مارجن عشان الصور اللي فوق */
+  margin-top: 30px; 
 }
 
 .team .box::before,
@@ -792,7 +845,7 @@ ul {
 }
 
 .team .box::before {
-  width: calc(100%);
+  width: 100%;
   z-index: -2;
 }
 
@@ -803,98 +856,87 @@ ul {
 }
 
 .team .box:hover::after {
-  width: calc(100%);
+  width: 100%;
 }
 
 .team .box .data {
   display: flex;
   align-items: center;
-  padding-top: 60px;
+  justify-content: center; /* توسيط الصورة بعد حذف السوشيال */
+  padding-top: 50px;
 }
 
 .team .box .data img {
-  padding: 25px;
-  width: calc(100%);
-  align-items: center;
+  width: 80%; /* تصغير بسيط عشان الميزان */
   transition: var(--main-transition);
   border-radius: 10px;
 }
 
-.team .box .data .social {
-  width: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.team .box .data .social a {
-  width: 60px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.team .box .data .social a:hover i {
-  color: var(--main-color);
-}
-
-.team .box .data .social i {
-  color: #777;
-  transition: var(--main-transition);
-}
+/* .team .box:hover img {
+  filter: grayscale(100%); 
+} */
 
 .team .box .info {
-  padding-left: 0;
-  /* غيرها من 80px لـ 0 */
+  padding: 20px;
   text-align: center;
-  /* اختيارى: لو عاوزه فى النص بالظبط */
-  padding: 15px;
 }
 
 .team .box .info h3 {
-  text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   color: var(--main-color);
-  font-size: 22px;
+  font-size: 24px;
   transition: var(--main-transition);
 }
 
 .team .box .info span {
-  padding-right: 10px;
-  color: #5487adf2;
-  line-height: 1.5;
-  font-size: 20px;
+  color: #555;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 15px;
+  font-size: 18px;
 }
 
 .team .box .info p {
-  margin-top: 0px;
-  margin-bottom: 25px;
-
-  padding: 7px;
-  width: 100%;
-  line-height: 1.5;
+  line-height: 1.7;
   color: #777;
-  margin-bottom: 14px;
+  font-size: 15px;
+  text-align: right; /* محاذاة لليمين عشان العربي */
+  direction: rtl;
+  padding: 0 10px;
 }
 
 .team .box:hover .info h3 {
   color: #777;
 }
 
+/* --- حماية الموبايل (الميزان) --- */
+@media (max-width: 767px) {
+  .team .container {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+  }
+  .team .box .data {
+    padding-top: 30px;
+  }
+  .team .box .info h3 {
+    font-size: 20px;
+  }
+  .team .box .info p {
+    text-align: center; /* أشيك في الموبايل */
+  }
+}
 /* End Team */
-/* Start Services */
+/* Start Services - عطر الشرق */
 .services {
   padding-top: var(--main-padding-top);
   padding-bottom: var(--main-padding-bottom);
   position: relative;
-  background-color: #ffffff;
+  background-color: #f6f6f6;
 }
 
 .services .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* التعديل لـ 350px عشان يظهر 3 كروت بس في الشاشات الكبيرة */
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 40px;
 }
 
@@ -904,16 +946,21 @@ ul {
   counter-increment: services;
   transition: var(--main-transition);
   position: relative;
+  /* لضمان توازي الكروت في الطول */
+  display: flex;
+  flex-direction: column;
 }
 
 .services .box p {
-  text-align: center;
-  padding: 7px;
-  width: 100%;
-  line-height: 1.5;
-  color: #777;
-  margin-top: 23px;
-  margin-bottom: 14px;
+  text-align: right; /* محاذاة لليمين عشان العربي */
+  direction: rtl;
+  padding: 0 20px;
+  line-height: 1.7;
+  color: #555;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 15px;
+  flex-grow: 1; /* دفع الجزء السفلي لآخر الكارت */
 }
 
 .services .box::before {
@@ -936,17 +983,17 @@ ul {
   width: 100%;
 }
 
-.services .box>i {
+.services .box > i {
   margin: 30px auto 20px;
   display: block;
   text-align: center;
   color: #d5d5d5;
 }
 
-.services .box>h3 {
+.services .box > h3 {
   text-align: center;
-  margin: 20px 0 40px;
-  font-size: 25px;
+  margin: 10px 0 20px;
+  font-size: 22px;
   color: var(--main-color);
 }
 
@@ -955,6 +1002,7 @@ ul {
   position: relative;
   background-color: #f9f9f9;
   text-align: right;
+  margin-top: auto; /* الحفاظ على مكان التفاصيل أسفل الكارت */
 }
 
 .services .box .info::before {
@@ -966,7 +1014,7 @@ ul {
   top: 0;
   height: 100%;
   width: 80px;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   display: flex;
   justify-content: center;
@@ -987,8 +1035,27 @@ ul {
 
 .services .box .info a {
   color: var(--main-color);
+  font-weight: bold;
+  text-decoration: none;
 }
 
+/* --- ضبط ميزان الموبايل (أهم جزء) --- */
+@media (max-width: 767px) {
+  .services .container {
+    /* يملأ الشاشة تماماً ويمنع الخروج يميناً أو يساراً */
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+    gap: 20px;
+  }
+  
+  .services .box h3 {
+    font-size: 19px;
+  }
+
+  .services .box p {
+    font-size: 14px;
+    text-align: center; /* أشيك في الموبايل */
+  }
+}
 /* End Services */
 /* Start Skills */
 .our-skills {
@@ -1049,15 +1116,16 @@ ul {
   height: 100%;
   /* 1. تدرج لوني يخلي الشريط ليه أبعاد (اللون الأزرق مع درجة أغمق شوية) */
   background: linear-gradient(90deg, var(--main-color) 0%, #1a73e8 100%);
-  
+
   /* 2. سرعة الزحف الهادئة اللي طلبته */
   transition: width 2.5s ease-in-out;
-  
+
   /* 3. إضافة لمعة خفيفة (Glossy Effect) */
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3), 
-              0 2px 4px rgba(0, 0, 0, 0.2);
-  
-  border-radius: 4px; /* جعل الحواف ناعمة */
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+
+  border-radius: 4px;
+  /* جعل الحواف ناعمة */
 }
 
 /* 4. حركة "اللمعة" المتحركة (اختياري لكنه يعطي لمسة جمالية) */
@@ -1065,27 +1133,32 @@ ul {
 
 /* 1. الحاوية الخارجية للشريط */
 .our-skills .skill .the-progress {
-  height: 15px; /* طول مناسب وشيك */
-  background-color: #eee; /* لون الخلفية رمادي فاتح */
+  height: 15px;
+  /* طول مناسب وشيك */
+  background-color: #eee;
+  /* لون الخلفية رمادي فاتح */
   position: relative;
   border-radius: 10px;
-  overflow: hidden; /* ضروري عشان اللمعة متطلعش بره الحواف */
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل داخلي بيدي عمق */
+  overflow: hidden;
+  /* ضروري عشان اللمعة متطلعش بره الحواف */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* ظل داخلي بيدي عمق */
 }
 
 /* 2. الشريط المتحرك (الـ Span) */
 .our-skills .skill .the-progress span {
   position: absolute;
   top: 0;
-  right: 0; /* التعديل هنا: يبدأ من اليمين للشمال */
+  right: 0;
+  /* التعديل هنا: يبدأ من اليمين للشمال */
   height: 100%;
-  
+
   /* تدرج لوني فخم (من الأزرق الفاتح للأزرق الملكي) */
   background: linear-gradient(270deg, var(--main-color) 0%, #1a73e8 100%);
-  
+
   /* السرعة الهادية (2.5 ثانية) مع حركة انسيابية */
   transition: width 2.5s ease-in-out;
-  
+
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
@@ -1099,26 +1172,34 @@ ul {
   width: 100%;
   height: 100%;
   /* لمعة بيضاء شفافة */
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%);
   animation: shine 3s infinite;
 }
 
 /* 4. محرك حركة اللمعة */
 @keyframes shine {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 /* --- نهاية ستايل البروجريس --- */
 
 @keyframes shine {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* End Skills */
@@ -1375,7 +1456,8 @@ ul {
 
 .pricing .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* 350px لضمان ظهور 3 كروت جنب بعض في الشاشات الكبيرة */
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 30px;
 }
 
@@ -1388,6 +1470,7 @@ ul {
   z-index: 1;
 }
 
+/* تأثير الـ Hover الخلفي */
 .pricing .box::before,
 .pricing .box::after {
   content: "";
@@ -1398,16 +1481,8 @@ ul {
   z-index: -1;
   transition: var(--main-transition);
 }
-
-.pricing .box::before {
-  left: 0;
-  top: 0;
-}
-
-.pricing .box::after {
-  right: 0;
-  bottom: 0;
-}
+.pricing .box::before { left: 0; top: 0; }
+.pricing .box::after { right: 0; bottom: 0; }
 
 .pricing .box:hover::before,
 .pricing .box:hover::after {
@@ -1420,6 +1495,7 @@ ul {
   }
 }
 
+/* علامة الأكثر مبيعاً */
 .pricing .box.popular .label {
   position: absolute;
   writing-mode: vertical-rl;
@@ -1445,45 +1521,40 @@ ul {
 .pricing .box .title {
   font-weight: bold;
   margin: 30px 0;
-  font-size: 32px;
+  font-size: 25px; /* تصغير بسيط عشان العناوين الطويلة */
   letter-spacing: -1px;
 }
 
 .pricing .box img {
-  width: 90px;
+  width: 80px;
   margin-bottom: 30px;
-}
-
-.pricing .box .price {
-  margin-bottom: 20px;
 }
 
 .pricing .box .amount {
   display: block;
-  font-size: 55px;
+  font-size: 45px; /* ميزان أفضل */
   font-weight: bold;
   margin-bottom: 5px;
   color: var(--main-color);
 }
 
-.pricing .box .time {
-  color: #777;
-}
-
 .pricing .box ul {
-  text-align: left;
+  list-style: none;
+  padding: 0;
 }
 
 .pricing .box ul li {
   text-align: right;
   padding: 20px;
   border-top: 1px solid #eee;
+  direction: rtl;
 }
 
+/* تعديل علامة الصح لتناسب العربي */
 .pricing .box ul li::before {
   font-family: "Font Awesome 5 Free";
   content: "\f00c";
-  margin-right: 10px;
+  margin-left: 10px; /* المسافة من اليسار لأن الكلام عربي */
   font-weight: 900;
   color: var(--main-color);
 }
@@ -1498,6 +1569,7 @@ ul {
   border-radius: 6px;
   font-weight: bold;
   transition: var(--main-transition);
+  text-decoration: none;
 }
 
 .pricing .box a:hover {
@@ -1506,6 +1578,18 @@ ul {
   color: white;
 }
 
+/* --- حماية الموبايل (أهم جزء) --- */
+@media (max-width: 767px) {
+  .pricing .container {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+  }
+  .pricing .box.popular {
+    top: 0; /* إلغاء الإزاحة في الموبايل */
+  }
+  .dots {
+    display: none; /* إخفاء النقط لمنع السكرول العرضي */
+  }
+}
 /* End Pricing */
 /* Start Videos */
 .videos {
@@ -1577,24 +1661,17 @@ ul {
 }
 
 /* End Videos */
-/* Start Stats */
+/* Start Stats - عطر الشرق */
 .stats {
+  /* 1. المسافة البيضاء الفاصلة بين السكاشن */
+  margin-top: var(--main-padding-top); 
+  
+  /* 2. المسافات الداخلية جوه السيكشن نفسه */
   padding-top: var(--main-padding-top);
   padding-bottom: var(--main-padding-bottom);
+  
   position: relative;
-  background-image: url("../imgs/stats.jpg");
-  background-size: cover;
-  min-height: 300px;
-}
-
-.stats::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(255 255 255 / 95%);
+  background-color: var(--section-background);
 }
 
 .stats h2 {
@@ -1618,30 +1695,26 @@ ul {
   position: relative;
   opacity: 0.8;
   transition: var(--main-transition);
+  z-index: 1;
 }
 
+/* حركة الخطوط الزرقاء */
 .stats .box::before,
 .stats .box::after {
   content: "";
   position: absolute;
   width: 2px;
   background-color: var(--main-color);
-  transition: 1s;
+  transition: 0.6s;
   height: 0;
 }
+.stats .box::before { top: 0; right: 0; }
+.stats .box::after { left: 0; bottom: 0; }
 
-.stats .box::before {
-  top: 0;
-  right: 0;
-}
-
-.stats .box::after {
-  left: 0;
-  bottom: 0;
-}
-
+/* الأنميشن (الطلوع لفوق والخطوط) */
 .stats .box:hover {
   opacity: 1;
+  transform: translateY(-10px);
 }
 
 .stats .box:hover::before,
@@ -1664,6 +1737,23 @@ ul {
   font-weight: bold;
 }
 
+/* ضبط الموبايل */
+@media (max-width: 767px) {
+  .stats {
+    margin-top: calc(var(--main-padding-top) / 2);
+    padding-top: calc(var(--main-padding-top) / 2);
+    padding-bottom: calc(var(--main-padding-bottom) / 2);
+  }
+  .stats .container {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+  }
+  .stats h2 {
+    font-size: 30px;
+  }
+  .stats .box .number {
+    font-size: 35px;
+  }
+}
 /* End Stats */
 /* Start Discount */
 .discount {
@@ -1896,6 +1986,12 @@ ul {
   color: #b9b9b9;
   margin-bottom: 15px;
 }
+.footer .box .line  {
+  color: #b9b9b9;
+}
+.footer .box .line  a{
+  color: #b9b9b9;
+}
 
 @media (max-width: 767px) {
   .footer .box .line {
@@ -1919,6 +2015,10 @@ ul {
 .footer .box .line .info {
   line-height: 1.7;
   flex: 1;
+}
+
+.footer .box .line .info span{
+  color: #777;
 }
 
 .footer .box .line .info span {
