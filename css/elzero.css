@@ -1704,7 +1704,7 @@ ul {
   content: "";
   position: absolute;
   width: 2px;
-  background-color: var(--main-color);
+  /* background-color: var(--main-color); */
   transition: 0.6s;
   height: 0;
 }
