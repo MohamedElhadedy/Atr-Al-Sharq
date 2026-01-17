@@ -333,91 +333,108 @@ function openFeatureModal(title, description) {
 // بوباب العرض وعمل شراء عرض
 // ============================================================
 // كود العروض الخاصة لموقع عطر الشرق 🌙
-// ============================================================
+// 1. وظيفة فتح المودال وتوليد الخانات (1 أو 2 أو 3)
+// ==========================================
+// محرك عروض عطر الشرق - النسخة المعتمدة
+// ==========================================
 
-// 1. وظيفة فتح نافذة العرض وكتابة نوعه تلقائياً
-function openOfferModal(offerName) {
+// 1. فتح المودال وتوليد الخانات
+function openOfferModal(offerName, count) {
     const modal = document.getElementById('offerModal');
-    const offerInput = document.getElementById('offerNameInput');
+    const input = document.getElementById('offerNameInput');
+    const container = document.getElementById('dynamicPerfumes');
     
-    if (modal && offerInput) {
-        offerInput.value = offerName; // وضع اسم العرض (مثلاً: الثنائي المميز) في الخانة المخفية
-        modal.style.display = 'flex'; // إظهار النافذة في نص الشاشة
+    if (modal && input && container) {
+        input.value = offerName;
+        container.innerHTML = ''; 
+        
+        for (let i = 1; i <= count; i++) {
+            container.innerHTML += `
+                <div style="position:relative; margin-bottom:15px;">
+                    <input type="text" name="برفان_${i}" placeholder="إختر العطر رقم ${i}" 
+                           class="form-input p-search" autocomplete="off" required>
+                    <div class="suggestion-box" style="display:none;"></div>
+                </div>`;
+        }
+        modal.style.display = 'flex';
     }
 }
 
-// 2. وظيفة إغلاق المودال
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// 3. إرسال فورم العروض (Fetch) لضمان بقاء العميل في الصفحة
-document.addEventListener('DOMContentLoaded', function () {
-    const offerForm = document.getElementById('offerForm');
-    if (offerForm) {
-        offerForm.onsubmit = function (e) {
-            e.preventDefault(); // منع المتصفح من الخروج من الموقع
-            
-            const btn = document.getElementById('offerSubmitBtn');
-            const originalText = btn.innerText;
-            
-            // تغيير حالة الزرار أثناء الإرسال
-            btn.disabled = true;
-            btn.innerText = "جاري الإرسال...";
-            
-            fetch(this.action, {
-                method: 'POST',
-                body: new FormData(this),
-                headers: { 'Accept': 'application/json' }
-            })
-            .then(response => {
-                if (response.ok) {
-                    closeModal('offerModal'); // قفل نافذة العرض
-                    // إظهار رسالة النجاح اللي إنت صممتها (successModal)
-                    const successModal = document.getElementById('successModal');
-                    if (successModal) successModal.style.display = 'flex';
-                    
-                    this.reset(); // تفريغ الخانات للطلب الجاي
-                } else {
-                    alert("حدث خطأ، حاول مرة أخرى.");
-                }
-            })
-            .catch(() => alert("تأكد من اتصالك بالإنترنت."))
-            .finally(() => {
-                btn.disabled = false;
-                btn.innerText = originalText;
-            });
-        };
-    }
-});
-
-// 1. وظيفة فتح المودال وسحب اسم العرض
-function openOfferModal(offerName) {
-    const modal = document.getElementById('offerModal');
-    const offerInput = document.getElementById('offerNameInput');
-    if (modal && offerInput) {
-        offerInput.value = offerName;
-        modal.style.display = 'flex'; // لضمان التوسيط
-    }
-}
-
-// 2. وظيفة إغلاق المودال
+// 2. إغلاق المودال
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.style.display = 'none';
 }
 
-// 3. كود الإرسال الاحترافي (Fetch)
+// 1. فتح المودال وتوليد الخانات
+function openOfferModal(offerName, count) {
+    const modal = document.getElementById('offerModal');
+    const input = document.getElementById('offerNameInput');
+    const container = document.getElementById('dynamicPerfumes');
+    
+    if (modal && input && container) {
+        input.value = offerName;
+        container.innerHTML = ''; 
+        
+        for (let i = 1; i <= count; i++) {
+            container.innerHTML += `
+                <div style="position:relative; margin-bottom:15px;">
+                    <input type="text" name="برفان_${i}" placeholder="إختر العطر رقم ${i}" 
+                           class="form-input p-search" autocomplete="off" required>
+                    <div class="suggestion-box" style="display:none;"></div>
+                </div>`;
+        }
+        modal.style.display = 'flex';
+    }
+}
+
+// 2. إغلاق المودال
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.style.display = 'none';
+}
+
+// 3. البحث الذكي (Suggestions) - الكود بتاعك زي ما هو
+document.addEventListener('input', function (e) {
+    if (e.target.classList.contains('p-search')) {
+        const val = e.target.value.toLowerCase().trim();
+        const box = e.target.nextElementSibling;
+        
+        if (val.length < 1) { 
+            box.style.display = 'none'; 
+            return; 
+        }
+        
+        // بيعتمد على وجود window.allPerfumes في ملف الداتا بتاعك
+        const matches = window.allPerfumes.filter(p => p.toLowerCase().includes(val)).slice(0, 8);
+        
+        if (matches.length > 0) {
+            box.innerHTML = matches.map(m => `<div class="suggest-item">${m}</div>`).join('');
+            box.style.display = 'block';
+        } else { 
+            box.style.display = 'none'; 
+        }
+    }
+});
+
+// 4. اختيار العطر من القائمة (الكود بتاعك زي ما هو)
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('suggest-item')) {
+        e.target.parentElement.previousElementSibling.value = e.target.innerText;
+        e.target.parentElement.style.display = 'none';
+    } else {
+        document.querySelectorAll('.suggestion-box').forEach(b => b.style.display = 'none');
+    }
+});
+
+// 5. محرك الإرسال (الجزء اللي بيخلي الميل يوصل)
 document.addEventListener('DOMContentLoaded', function () {
     const offerForm = document.getElementById('offerForm');
     if (offerForm) {
         offerForm.onsubmit = function (e) {
-            e.preventDefault(); // العميل هيفضل في نفس مكانه في الموقع
-            
+            e.preventDefault();
             const btn = document.getElementById('offerSubmitBtn');
+            const originalText = btn.innerText;
             btn.disabled = true;
             btn.innerText = "جاري الإرسال...";
             
@@ -429,22 +446,56 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => {
                 if (response.ok) {
                     closeModal('offerModal');
-                    // إظهار رسالة النجاح (successModal)
                     const successModal = document.getElementById('successModal');
                     if (successModal) successModal.style.display = 'flex';
                     this.reset();
                 } else {
-                    alert("حدث خطأ، حاول مرة أخرى.");
+                    alert("حدث خطأ في الإرسال، حاول مرة أخرى.");
                 }
             })
             .catch(() => alert("تأكد من اتصالك بالإنترنت."))
             .finally(() => {
                 btn.disabled = false;
-                btn.innerText = "تأكيد طلب العرض";
+                btn.innerText = originalText;
             });
         };
     }
 });
 
-// نهايه العروض
+// 5. محرك الإرسال (Fetch)
+document.addEventListener('DOMContentLoaded', function () {
+    const offerForm = document.getElementById('offerForm');
+    if (offerForm) {
+        offerForm.onsubmit = function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('offerSubmitBtn');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = "جاري الإرسال...";
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => {
+                if (response.ok) {
+                    closeModal('offerModal');
+                    const successModal = document.getElementById('successModal');
+                    if (successModal) successModal.style.display = 'flex';
+                    this.reset();
+                } else {
+                    alert("حدث خطأ في الإرسال، حاول مرة أخرى.");
+                }
+            })
+            .catch(() => alert("تأكد من اتصالك بالإنترنت."))
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            });
+        };
+    }
+    
+});
+
 
