@@ -473,6 +473,125 @@ ul {
 }
 
 /* End Articles */
+
+/* بدايه اسعار الازاز */
+.pricing-tabs-section {
+    direction: rtl;
+    text-align: center;
+    padding: 50px 10px;
+    font-family: sans-serif;
+}
+
+.tabs-container {
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    padding: 12px 25px;
+    font-size: 18px;
+    border: 2px solid #2196f3;
+    background: #fff;
+    color: #2196f3;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: #2196f3;
+    color: #fff;
+}
+
+.tab-content {
+    display: none;
+    width: 100%; /* عشان يملأ عرض السيكشن */
+}
+
+.active-content {
+    display: flex !important;
+}
+
+.cards-wrapper {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-evenly; /* بيوزع الفراغات بالتساوي ويخلي الكروت تملأ المساحة */
+    width: 100%;
+    max-width: 1200px; /* عشان على الشاشات الكبيرة أوي ميبعدوش عن بعض بشكل وحش */
+    margin: 0 auto;
+}
+
+/* تصميم الكارت للكمبيوتر */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    width: calc(45% - 20px); /* بياخد حوالي نص المساحة مع مراعاة المسافات */
+    max-width: 400px; /* ليميت عشان ميكبرش بزيادة في الشاشات الواسعة */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: 0.3s;
+    background: #fff;
+    box-sizing: border-box; /* عشان الـ padding ميأثرش على العرض */
+}
+
+.card:hover { transform: translateY(-5px); }
+
+.card img { width: 100%; height: auto; object-fit: contain; }
+
+.price {
+    font-size: 1.5rem;
+    color: #2196f3;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.buy-btn {
+    background: #2196f3;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* --- التعديل للموبايل عشان يفرش الشاشة --- */
+@media (max-width: 600px) {
+    .cards-wrapper {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 10px !important;
+        padding: 10px;
+        justify-content: space-between !important; /* بيخلي الكرت اليمين في الآخر واليسار في الآخر */
+    }
+
+    .card {
+        width: 48% !important; /* الكارتين يملأوا الشاشة بالظبط مع فرق بسيط للـ gap */
+        max-width: unset !important;
+        padding: 15px 10px !important;
+    }
+
+    .card img {
+        height: 150px !important; /* تكبير الصورة شوية عشان المساحة بقت أكبر */
+    }
+}
+
+/* إخفاء التابات في البداية */
+.tab-content {
+    display: none;
+}
+
+/* إظهار التابة النشطة فقط */
+.active-content {
+    display: block !important;
+}
+/* نهاية الاسعار */
 /* Start Gallery - عطر الشرق */
 .gallery {
   padding-top: var(--main-padding-top);

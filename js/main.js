@@ -499,3 +499,206 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+// تابه الاسعار
+
+// 1. قاموس الأسعار
+// 1. قاموس الأسعار
+const perfumePrices = {
+    'eco-30': 100, 'premium-30': 150,
+    'eco-50': 200, 'premium-50': 250,
+    'eco-100': 300, 'premium-100': 350,
+    'بلية صغيرة': 30, 'بلية وسط': 50, 'بلية كبيرة': 70
+};
+
+// 2. وظيفة إظهار الخطأ
+function showError(input, message) {
+    const oldMsg = input.parentElement.querySelector('.error-msg');
+    if (oldMsg) oldMsg.remove();
+    const msg = document.createElement('span');
+    msg.className = 'error-msg';
+    msg.innerText = message;
+    msg.style = "color: #ff4d4d; font-size: 12px; display: block; margin-bottom: 5px; font-weight: bold;";
+    input.style.borderColor = "#ff4d4d";
+    input.style.backgroundColor = "#fff5f5";
+    input.parentElement.insertBefore(msg, input);
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input.focus();
+}
+
+// تنظيف الخطأ عند الكتابة
+document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('input') || e.target.classList.contains('perfume-input')) {
+        e.target.style.borderColor = "#ddd";
+        e.target.style.backgroundColor = "white";
+        const msg = e.target.parentElement.querySelector('.error-msg');
+        if (msg) msg.remove();
+    }
+});
+
+// 3. تحديث السعر والإجمالي
+function updatePriceNow(selectElement) {
+    const parent = selectElement.closest('.perfume-item');
+    const priceField = parent.querySelector('.price-input');
+    const val = selectElement.value;
+    if (priceField) {
+        priceField.value = perfumePrices[val] || 0;
+        calculateTotal();
+    }
+}
+
+function calculateTotal() {
+    let total = 0;
+    const allPrices = document.querySelectorAll('.price-input');
+    allPrices.forEach(input => { total += parseInt(input.value) || 0; });
+    const totalDisplay = document.getElementById('total-amount');
+    if (totalDisplay) { totalDisplay.value = total + " EGP"; }
+}
+
+// 4. وظيفة "اطلب الآن" من التابات 
+function selectAndGo(productCode) {
+    const firstSelect = document.querySelector('select[name="الحجم_1"]');
+    if (firstSelect) {
+        firstSelect.value = productCode;
+        updatePriceNow(firstSelect);
+    }
+    const formSection = document.getElementById('form');
+    if (formSection) {
+        formSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// 5. إضافة عطر آخر
+function addAnotherPerfume() {
+    const container = document.getElementById('perfumeItems');
+    const allItems = container.querySelectorAll('.perfume-item');
+    const lastItem = allItems[allItems.length - 1];
+
+    if (lastItem) {
+        const lastInput = lastItem.querySelector('.perfume-input');
+        const lastSelect = lastItem.querySelector('.size-select');
+        if (lastInput && lastInput.value.trim() === "") { showError(lastInput, "برجاء إدخال اسم العطر أولاً"); return; }
+        if (lastSelect && lastSelect.value === "") { showError(lastSelect, "برجاء اختيار حجم الزجاجة أولاً"); return; }
+    }
+
+    const itemCount = allItems.length + 1;
+    const newItem = document.createElement('div');
+    newItem.className = 'perfume-item';
+    newItem.style = "border-bottom: 1px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; position: relative; padding-top: 15px;";
+    
+    newItem.innerHTML = `
+      <button type="button" onclick="removePerfume(this)" style="position: absolute; left: 0; top: 0; background: #ff4d4d; color: white; border: none; border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 12px;">مسح ×</button>
+      <input class="input perfume-input" type="text" placeholder="إسم العطر" name="العطر_${itemCount}" autocomplete="off" required />
+      <div class="suggestions-container" style="display:none; position:absolute; background:white; border:1px solid #ddd; width:100%; z-index:1000; max-height:200px; overflow-y:auto;"></div> 
+      <select class="input size-select" name="الحجم_${itemCount}" required onchange="updatePriceNow(this)">
+        <option value="" disabled selected>إختر حجم الزجاجة</option>
+        <option value="eco-30">30 مللى - اقتصادية</option>
+        <option value="premium-30">30 مللى - راقية + بوكس</option>
+        <option value="eco-50">50 مللى - اقتصادية</option>
+        <option value="premium-50">50 مللى - راقية + بوكس</option>
+        <option value="eco-100">100 مللى - اقتصادية</option>
+        <option value="premium-100">100 مللى - راقية + بوكس</option>
+        <option value="بلية صغيرة">بلية صغيرة</option>
+        <option value="بلية وسط">بلية وسط</option>
+        <option value="بلية كبيرة">بلية كبيرة</option>
+      </select>
+      <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">السعر:</span>
+        <input class="input price-input" type="text" name="السعر_${itemCount}" value="0" readonly style="background:#f9f9f9; color:#2196f3; font-weight:bold; flex: 1;" />
+      </div>
+    `;
+    container.appendChild(newItem);
+}
+
+function removePerfume(btn) { btn.closest('.perfume-item').remove(); calculateTotal(); }
+
+// 6. محرك البحث الذكي
+document.addEventListener('input', function (e) {
+    if (e.target.classList.contains('perfume-input')) {
+        const val = e.target.value.toLowerCase().trim();
+        const parent = e.target.closest('.perfume-item');
+        let box = parent.querySelector('.suggestions-container');
+        if (val.length < 1) { if(box) box.style.display = 'none'; return; }
+        if (window.allPerfumes) {
+            const matches = window.allPerfumes.filter(p => p.toLowerCase().includes(val)).slice(0, 8);
+            if (matches.length > 0) {
+                box.innerHTML = matches.map(m => `<div class="suggest-item" style="padding:10px; cursor:pointer; border-bottom:1px solid #eee; background:white;">${m}</div>`).join('');
+                box.style.display = 'block';
+            } else { box.style.display = 'none'; }
+        }
+    }
+});
+
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('suggest-item')) {
+        const parent = e.target.closest('.perfume-item');
+        parent.querySelector('.perfume-input').value = e.target.innerText;
+        e.target.parentElement.style.display = 'none';
+    } else {
+        document.querySelectorAll('.suggestions-container').forEach(b => b.style.display = 'none');
+    }
+});
+
+// 7. الإرسال وظهور البوب آب
+function validateAndSend() {
+    const orderForm = document.getElementById('orderForm');
+    let hasError = false;
+    document.querySelectorAll('.perfume-input').forEach(i => { if(i.value.trim()===""){ showError(i,"إسم العطر مطلوب"); hasError=true; } });
+    document.querySelectorAll('.size-select').forEach(s => { if(s.value===""){ showError(s,"إختر الحجم"); hasError=true; } });
+    const phone = document.querySelector('input[name="الهاتف"]');
+    const address = document.querySelector('input[name="العنوان"]');
+    if(address && address.value.trim()===""){ showError(address,"العنوان مطلوب"); hasError=true; }
+    if(phone && phone.value.trim()===""){ showError(phone,"رقم التليفون مطلوب"); hasError=true; }
+    if (hasError) return;
+    const btn = document.getElementById('finalSubmitBtn');
+    btn.value = "جاري الإرسال...";
+    btn.disabled = true;
+    fetch(orderForm.action, {
+        method: 'POST',
+        body: new FormData(orderForm),
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(res => {
+        if(res.ok) {
+            const modal = document.getElementById('successModal');
+            if (modal) { modal.style.display = 'flex'; }
+            orderForm.reset();
+            calculateTotal();
+        } else { alert("خطأ في الإرسال"); }
+    })
+    .catch(() => alert("تأكد من الإنترنت"))
+    .finally(() => { btn.value = "إتمام الطلب"; btn.disabled = false; });
+}
+
+function closeSuccessModal() {
+    const modal = document.getElementById('successModal');
+    if (modal) { modal.style.display = 'none'; }
+}
+
+// 8. وظيفة التابات (إصلاح مشكلة الظهور المتعدد)
+function openTab(evt, sizeName) {
+    var i, tabContent, tabBtns;
+    
+    // إخفاء كل التابات يدوياً وإجبارياً
+    tabContent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabContent.length; i++) {
+        tabContent[i].style.display = "none"; // إخفاء مباشر بالـ inline style
+        tabContent[i].classList.remove("active-content");
+    }
+
+    // إزالة اللون النشط من كل أزرار التابات
+    tabBtns = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].classList.remove("active");
+    }
+
+    // إظهار التابة اللي عليها الدور فقط
+    const target = document.getElementById(sizeName);
+    if (target) {
+        target.style.display = "block"; // إظهار مباشر
+        target.classList.add("active-content");
+    }
+    
+    // تمييز الزرار الحالي
+    evt.currentTarget.classList.add("active");
+}
+// نهايه تابه الاسعار

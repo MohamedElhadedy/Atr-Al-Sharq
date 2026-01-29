@@ -194,6 +194,69 @@
     </div>
   </div>
   <!-- End pricing -->
+  <!-- قايمه الاسعار -->
+  <section class="pricing-tabs-section">
+    <h2 class="main-title"> الأحـجام والأسعـار </h2>
+
+    <div class="tabs-container">
+      <button class="tab-btn" onclick="openTab(event, 'size30')">30 مللى</button>
+      <button class="tab-btn active" onclick="openTab(event, 'size50')">50 مللى</button>
+      <button class="tab-btn" onclick="openTab(event, 'size100')">100 مللى</button>
+    </div>
+
+    <div id="size30" class="tab-content">
+      <div class="cards-wrapper">
+        <div class="card">
+          <img src="imgs/popular-30.png">
+          <h3>العبوة الاقتصادية</h3>
+          <p class="price">100 EGP</p>
+          <button class="buy-btn" onclick="selectAndGo('eco-30')">اطلب الآن</button>
+        </div>
+        <div class="card">
+          <img src="imgs/premium-30.png">
+          <h3>العبوة الشيك + البوكس</h3>
+          <p class="price">150 EGP</p>
+          <button class="buy-btn" onclick="selectAndGo('premium-30')">اطلب الآن</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="size50" class="tab-content active-content">
+      <div class="cards-wrapper">
+        <div class="card">
+          <img src="imgs/popular-50.png">
+          <h3>العبوة الاقتصادية</h3>
+          <p class="price">200 EGP</p>
+          <button class="buy-btn" onclick="selectAndGo('eco-50')">اطلب الآن</button>
+        </div>
+        <div class="card">
+          <img src="imgs/premium-50.png">
+          <h3>العبوة الشيك + البوكس</h3>
+          <p class="price">250 EGP</p>
+          <button class="buy-btn" onclick="selectAndGo('premium-50')">اطلب الآن</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="size100" class="tab-content">
+      <div class="cards-wrapper">
+        <div class="card">
+          <img src="imgs/popular-100.jpg">
+          <h3>العبوة الاقتصادية</h3>
+          <p class="price">300 EGP</p>
+          <button class="buy-btn" onclick="selectAndGo('eco-100')">اطلب الآن</button>
+        </div>
+        <div class="card">
+          <img src="imgs/premium-100.png">
+          <h3>العبوة الشيك + البوكس</h3>
+          <p class="price">350 EGP</p>
+          <button class="buy-btn" onclick="selectAndGo('premium-100')">اطلب الآن</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- نهاية قايمه الاسعار -->
+
   <!-- Start Gallery -->
   <div class="gallery" id="gallery">
     <h2 class="main-title">الأكثر مبيعا</h2>
@@ -590,28 +653,46 @@
     <div class="form" id="form">
       <div class="content">
         <h2>عمل طلب شراء</h2>
-        <form action="https://formsubmit.co/Mohamed.elhadedy220@gmail.com" method="POST" id="orderForm">
+        <form action="https://formsubmit.co/Mohamed.elhadedy220@gmail.com" method="POST" id="orderForm" novalidate>
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_subject" value="طلب شراء جديد من عطر الشرق 🌙">
           <input type="hidden" name="_template" value="table">
+
           <div id="perfumeItems">
             <div class="perfume-item"
               style="border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; position: relative;">
               <input class="input perfume-input" type="text" placeholder="إسم العطر" name="العطر_1" autocomplete="off"
                 required />
               <div class="suggestions-container"></div>
-              <select class="input" name="الحجم_1" required style="cursor: pointer;">
-                <option value="" disabled selected>إختر حجم العطر</option>
+
+              <select class="input size-select" name="الحجم_1" required onchange="updatePriceNow(this)">
+                <option value="" disabled selected>إختر حجم ونوع العبوة</option>
+                <option value="eco-30">30 مللى - اقتصادية</option>
+                <option value="premium-30">30 مللى - شكل + بوكس</option>
+                <option value="eco-50">50 مللى - اقتصادية</option>
+                <option value="premium-50">50 مللى - شكل + بوكس</option>
+                <option value="eco-100">100 مللى - اقتصادية</option>
+                <option value="premium-100">100 مللى - شكل + بوكس</option>
                 <option value="بلية صغيرة">بلية صغيرة</option>
                 <option value="بلية وسط">بلية وسط</option>
                 <option value="بلية كبيرة">بلية كبيرة</option>
-                <option value="20 مللى">20 مللى</option>
-                <option value="30 مللى">30 مللى</option>
-                <option value="50 مللى">50 مللى</option>
-                <option value="100 مللى">100 مللى</option>
               </select>
+
+              <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 14px; color: #666;">السعر:</span>
+                <input class="input price-input" type="text" name="السعر_1" value="0" readonly
+                  style="background-color: #f9f9f9; color: #2196f3; font-weight: bold; border: 1px solid #ddd; cursor: not-allowed; flex: 1;" />
+              </div>
             </div>
           </div>
+
+          <div
+            style="background: #f0f8ff; padding: 15px; border: 2px solid #19c8fa; border-radius: 8px; margin-bottom: 15px; text-align: center;">
+            <strong style="color: #333;">إجمالي الحساب: </strong>
+            <input type="text" id="total-amount" name="الاجمالي_الكلي" value="0 EGP" readonly
+              style="background: transparent; border: none; font-size: 20px; font-weight: bold; color: #19c8fa; width: 120px; text-align: center;">
+          </div>
+
           <button type="button" onclick="addAnotherPerfume()"
             style="width: 100%; background: #2196f3; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-bottom: 15px;">
             + أضف عطر آخر للطلب
@@ -619,11 +700,12 @@
           <hr>
           <input class="input" type="text" placeholder="رقم التليفون" name="الهاتف" required />
           <input class="input" type="text" placeholder="العنوان بالتفصيل" name="العنوان" required />
-          <input type="submit" value="إتمام الطلب"
+          <input type="button" value="إتمام الطلب" id="finalSubmitBtn" onclick="validateAndSend()"
             style="width: 100%; padding: 15px; background-color: #19c8fa; color: white; border: none; cursor: pointer; font-weight: bold;" />
         </form>
       </div>
     </div>
+  </div>
   </div>
   <!-- End Discount -->
   <!-- Start Footer -->
